@@ -17227,6 +17227,55 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2405f0a681bc47b40ad1724b76723cbb, type: 3}
+--- !u!1 &1890480491
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1890480493}
+  - component: {fileID: 1890480492}
+  m_Layer: 0
+  m_Name: RankingManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1890480492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1890480491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c6ac87a2d6c6f94b91801ab85f4f6be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  puntosPrefab: {fileID: 1620040358060251516, guid: 04bbcd81f69f9a841a45d36b2a3b4d6a,
+    type: 3}
+  puntosPadre: {fileID: 1513355801003969404, guid: d1559c7b2317f1e40a6616c10972ca56,
+    type: 3}
+  topRank: 5
+  limiteRanking: 10
+--- !u!4 &1890480493
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1890480491}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 773.9297, y: 366.8691, z: -68.56494}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 24
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1908830354
 GameObject:
   m_ObjectHideFlags: 0
@@ -21834,6 +21883,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5021733018873682448, guid: 4f0b566b48d492045849e15ab82613e6,
+        type: 3}
+      propertyPath: rankingGO
+      value: 
+      objectReference: {fileID: 1890480491}
     - target: {fileID: 5021733018873682448, guid: 4f0b566b48d492045849e15ab82613e6,
         type: 3}
       propertyPath: TextoLevelCoins

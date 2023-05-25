@@ -1,10 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+//Librerías añadidas
+using UnityEngine.UI;
 
 public class GameManager 
 {
-   //Creamos una referencia est�tica que apunta al Singleton
+    public Text puntosTXT;
+    public Text nombreTXT;
+    public GameObject panelGO;
+   
+
+
+    //Creamos una referencia est�tica que apunta al Singleton
     private static GameManager instance;
     //Singleton
     private PlayerLifes _playerLifes;
@@ -92,6 +100,10 @@ public class GameManager
         _reloj = null;
         _ad = null;
     }
+
+   
+
+    
 
     
 }

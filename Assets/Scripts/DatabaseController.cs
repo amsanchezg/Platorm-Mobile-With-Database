@@ -11,7 +11,7 @@ public class DatabaseController : MonoBehaviour
     string rutaDB;
     string strConexion;
     //Nombre de la base de datos con la que vamos a trabajar
-    string DBFileName = "ZapatosJuanAlbertoDB.db";
+    string DBFileName = "PuntajeNiveles.db";
 
     //Referencia que necesitamos para poder crear una conexión 
     IDbConnection dbConnection;

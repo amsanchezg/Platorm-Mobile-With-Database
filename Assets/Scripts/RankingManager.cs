@@ -12,7 +12,7 @@ public class RankingManager : MonoBehaviour
     //Variable para controlar la ruta de la base de datos, constructor de la ruta, y el nombre de la base de datos
     string rutaDB;
     string strConexion;
-    string DBFileName = "RankingDB.db";
+    string DBFileName = "RankingAntonioMiguelDB.db";
 
     //Variable para trabajar con las conexiones
     IDbConnection dbConnection;
@@ -39,7 +39,7 @@ public class RankingManager : MonoBehaviour
         //InsertarPuntos("María", 25);
         //BorrarPuntos(3);
         //ObtenerRanking();
-        BorrarPuntosExtra();
+        //BorrarPuntosExtra();
         MostrarRanking();
     }
 
@@ -108,13 +108,13 @@ public class RankingManager : MonoBehaviour
     }
 
     //Método para insertar puntos en la DB
-    public void InsertarPuntos(string n, int s)
+    public void InsertarPuntos(int s)
     {
         //Abrimos la DB
         AbrirDB();
         // Crear la consulta
         dbCommand = dbConnection.CreateCommand();
-        string sqlQuery = String.Format("INSERT INTO ranking(Name, Score) values(\"{0}\",\"{1}\")", n, s);
+        string sqlQuery = String.Format("INSERT INTO ranking(Score) values(\"{0}\")", s);
         dbCommand.CommandText = sqlQuery;
         dbCommand.ExecuteScalar();
         //Cerramos la DB
@@ -122,18 +122,18 @@ public class RankingManager : MonoBehaviour
     }
 
     //Método para borrar puntos de la DB
-    void BorrarPuntos(int id)
-    {
-        //Abrimos la DB
-        AbrirDB();
-        // Crear la consulta
-        dbCommand = dbConnection.CreateCommand();
-        string sqlQuery = "DELETE FROM Ranking WHERE PlayerId = \"" + id + "\"";
-        dbCommand.CommandText = sqlQuery;
-        dbCommand.ExecuteScalar();
-        //Cerramos la DB
-        CerrarDB();
-    }
+    //void BorrarPuntos(int id)
+    //{
+    //    //Abrimos la DB
+    //    AbrirDB();
+    //    // Crear la consulta
+    //    dbCommand = dbConnection.CreateCommand();
+    //    string sqlQuery = "DELETE FROM ranking WHERE PlayerId = \"" + id + "\"";
+    //    dbCommand.CommandText = sqlQuery;
+    //    dbCommand.ExecuteScalar();
+    //    //Cerramos la DB
+    //    CerrarDB();
+    //}
 
     //Método para mostrar el ranking en la UI
     void MostrarRanking()
@@ -155,41 +155,40 @@ public class RankingManager : MonoBehaviour
                 //Posición en la lista
                 Ranking rankTemp = rankings[i];
                 //Llamamos al método que pone los puntos
-                tempPrefab.GetComponent<RankingScript>().PonerPuntos("#" + (i + 1).ToString(),
-                                                        rankTemp.Name, rankTemp.Score.ToString());
+                tempPrefab.GetComponent<RankingScript>().PonerPuntos(rankTemp.Score.ToString());
             }
         }
     }
 
     //Método para borrar los puntos extra
-    void BorrarPuntosExtra()
-    {
-        //Obtener el Ranking
-        ObtenerRanking();
-        //Comprobar que el ranking sea mas grande que el limite
-        if (limiteRanking <= rankings.Count)
-        {
-            //Le damos la vuelta a la lista para borrar las menores puntuaciones
-            rankings.Reverse();
-            //obtenemos la diferencia entre el ranking y el limite, para ver cuantos registros nos sobran
-            int diferencia = rankings.Count - limiteRanking;
-            //Abrimos DB
-            AbrirDB();
-            //Creo Comando
-            dbCommand = dbConnection.CreateCommand();
-            //Bucle con la diferencia
-            for (int i = 0; i < diferencia; i++)
-            {
-                //Borrar por ID en la posicion del ranking
-                string sqlQuery = "DELETE FROM Ranking WHERE PlayerId = \"" + rankings[i].Id + "\"";
-                dbCommand.CommandText = sqlQuery;
-                dbCommand.ExecuteScalar();
-            }
-            //Cerrar DB
-            CerrarDB();
+    //void BorrarPuntosExtra()
+    //{
+    //    //Obtener el Ranking
+    //    ObtenerRanking();
+    //    //Comprobar que el ranking sea mas grande que el limite
+    //    if (limiteRanking <= rankings.Count)
+    //    {
+    //        //Le damos la vuelta a la lista para borrar las menores puntuaciones
+    //        rankings.Reverse();
+    //        //obtenemos la diferencia entre el ranking y el limite, para ver cuantos registros nos sobran
+    //        int diferencia = rankings.Count - limiteRanking;
+    //        //Abrimos DB
+    //        AbrirDB();
+    //        //Creo Comando
+    //        dbCommand = dbConnection.CreateCommand();
+    //        //Bucle con la diferencia
+    //        for (int i = 0; i < diferencia; i++)
+    //        {
+    //            //Borrar por ID en la posicion del ranking
+    //            string sqlQuery = "DELETE FROM Ranking WHERE PlayerId = \"" + rankings[i].Id + "\"";
+    //            dbCommand.CommandText = sqlQuery;
+    //            dbCommand.ExecuteScalar();
+    //        }
+    //        //Cerrar DB
+    //        CerrarDB();
 
-        }
-    }
+    //    }
+    //}
 
     //Método para cerrar la DB
     void CerrarDB()

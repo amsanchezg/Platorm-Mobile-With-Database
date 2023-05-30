@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class Goal : MonoBehaviour
 {
     CoinsManager coinsManager;
+    NuevoCoinManager nuevoCoinManager;
     public string escena;
     public Text textGoal;
     public int levelToUnlock;
@@ -37,8 +38,8 @@ public class Goal : MonoBehaviour
             coinmanagerNew.FinalizarNivelyGuardarMonedas();
 
             ///FIN DE NUEVO COIN MANAGER
-
-
+            
+            
             victoryAnim.Ocurred(this.gameObject);
             numberOfUnlockedLevels = PlayerPrefs.GetInt("levelsUnlocked");
             VictoryEvent();

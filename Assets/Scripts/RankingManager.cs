@@ -12,7 +12,7 @@ public class RankingManager : MonoBehaviour
     //Variable para controlar la ruta de la base de datos, constructor de la ruta, y el nombre de la base de datos
     string rutaDB;
     string strConexion;
-    string DBFileName = "RankingAntonioMiguelDB.db";
+    string DBFileName = "RankingMonedas.db";
 
     //Variable para trabajar con las conexiones
     IDbConnection dbConnection;
@@ -27,7 +27,7 @@ public class RankingManager : MonoBehaviour
     //Variables para almacenar el prefab y la posición del padre
     public GameObject puntosPrefab;
     public Transform puntosPadre;
-
+    private int money;
     //Límite de datos que aparecerá en la UI
     public int topRank;
     //Limitamos el ranking que podemos tener
@@ -40,54 +40,67 @@ public class RankingManager : MonoBehaviour
         //BorrarPuntos(3);
         //ObtenerRanking();
         //BorrarPuntosExtra();
-        MostrarRanking();
+        //MostrarRanking();
     }
 
     //Método para abrir la DB
-    void AbrirDB()
+    void OpenDB(string DatabaseName)
     {
-        // Crear y abrir la conexión
-        // Comprobar en que plataforma estamos
-        // Si es el Editor de Unity mantenemos la ruta
-        if (Application.platform == RuntimePlatform.WindowsEditor)
-        {
-            rutaDB = Application.dataPath + "/StreamingAssets/" + DBFileName;
-        }
-        //Si estamos en PC
-        else if (Application.platform == RuntimePlatform.WindowsPlayer)
-        {
-            rutaDB = Application.dataPath + "/StreamingAssets/" + DBFileName;
-        }
-        //Si es Android
-        else if (Application.platform == RuntimePlatform.Android)
-        {
-            rutaDB = Application.persistentDataPath + "/" + DBFileName;
-            // Comprobar si el archivo se encuentra almecenado en persistant data
-            if (!File.Exists(rutaDB))
+
+#if UNITY_EDITOR
+        var dbPath = string.Format(@"Assets/StreamingAssets/{0}", DatabaseName);
+#else
+            // check if file exists in Application.persistentDataPath
+            var filepath = string.Format("{0}/{1}", Application.persistentDataPath, DatabaseName);
+       
+            if (!File.Exists(filepath))
             {
-                // Almaceno el archivo en load db
-                WWW loadDB = new WWW("jar;file://" + Application.dataPath + "!/assets/" + DBFileName);
-                while (!loadDB.isDone)
-                {
-
-                }
-                // Copio el archivo a persistant data
-                File.WriteAllBytes(rutaDB, loadDB.bytes);
+                Debug.Log("Database not in Persistent path");
+                // if it doesn't ->
+                // open StreamingAssets directory and load the db ->
+           
+#if UNITY_ANDROID
+                var loadDb = new WWW("jar:file://" + Application.dataPath + "!/assets/" + DatabaseName);  // this is the path to your StreamingAssets in android
+                while (!loadDb.isDone) { }  // CAREFUL here, for safety reasons you shouldn't let this while loop unattended, place a timer and error check
+                // then save to Application.persistentDataPath
+                File.WriteAllBytes(filepath, loadDb.bytes);
+#elif UNITY_IOS
+                var loadDb = Application.dataPath + "/Raw/" + DatabaseName;  // this is the path to your StreamingAssets in iOS
+                // then save to Application.persistentDataPath
+                File.Copy(loadDb, filepath);
+#elif UNITY_WP8
+                var loadDb = Application.dataPath + "/StreamingAssets/" + DatabaseName;  // this is the path to your StreamingAssets in iOS
+                // then save to Application.persistentDataPath
+                File.Copy(loadDb, filepath);
+           
+#elif UNITY_WINRT
+                var loadDb = Application.dataPath + "/StreamingAssets/" + DatabaseName;  // this is the path to your StreamingAssets in iOS
+                // then save to Application.persistentDataPath
+                File.Copy(loadDb, filepath);
+#endif
+           
+                Debug.Log("Database written");
             }
-        }
+       
+            var dbPath = filepath;
+#endif
+        //_connection = new SQLiteConnection(dbPath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create);
+        Debug.Log("Final PATH: " + dbPath);
 
-        strConexion = "URI=file:" + rutaDB;
+        //open db connection
+        strConexion = "URI=file:" + dbPath;
+        Debug.Log("Stablishing connection to: " + strConexion);
         dbConnection = new SqliteConnection(strConexion);
         dbConnection.Open();
     }
 
-    //Método para obtener el Ranking de la DB
-    void ObtenerRanking()
+    ////Método para obtener el Ranking de la DB
+    public void ObtenerRanking()
     {
         //Primero dejamos la lista de Rankings limpia
         rankings.Clear();
         //Abrimos la DB
-        AbrirDB();
+        OpenDB(DBFileName);
         // Crear la consulta
         dbCommand = dbConnection.CreateCommand();
         string sqlQuery = "SELECT * FROM ranking";
@@ -97,7 +110,7 @@ public class RankingManager : MonoBehaviour
         reader = dbCommand.ExecuteReader();
         while (reader.Read())
         {
-            rankings.Add(new Ranking(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(2), reader.GetDateTime(3)));
+            money = reader.GetInt32(0);
         }
         reader.Close();
         reader = null;
@@ -111,7 +124,7 @@ public class RankingManager : MonoBehaviour
     public void InsertarPuntos(int s)
     {
         //Abrimos la DB
-        AbrirDB();
+        OpenDB(DBFileName);
         // Crear la consulta
         dbCommand = dbConnection.CreateCommand();
         string sqlQuery = String.Format("INSERT INTO ranking(Score) values(\"{0}\")", s);
@@ -135,8 +148,8 @@ public class RankingManager : MonoBehaviour
     //    CerrarDB();
     //}
 
-    //Método para mostrar el ranking en la UI
-    void MostrarRanking()
+    ////Método para mostrar el ranking en la UI
+    public void MostrarRanking()
     {
         //Obtener el ranking de la DB
         ObtenerRanking();
